@@ -1,0 +1,66 @@
+package in.org.quicko.sheet.serializer;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+
+import java.io.IOException;
+
+import in.org.quicko.sheet.beans.Item;
+
+public class CustomItemDeserializer extends JsonDeserializer<Item>
+{
+
+	@Override
+	public Item deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
+	{
+		String key = null;
+		Object value = null;
+
+		// If we're at the start of an object, advance to the first field name.
+		if (p.getCurrentToken() == JsonToken.START_OBJECT)
+		{
+			p.nextToken();
+		}
+
+		// Process each field
+		while (p.getCurrentToken() == JsonToken.FIELD_NAME)
+		{
+			key = p.currentName(); // get the current key name
+			p.nextToken(); // move to the value token
+
+			JsonToken token = p.getCurrentToken();
+			switch (token)
+			{
+				case VALUE_NUMBER_INT:
+				case VALUE_NUMBER_FLOAT:
+					// Use BigDecimal for all number point values.
+					value = p.getDecimalValue();
+					break;
+				case VALUE_STRING:
+					value = p.getText();
+					break;
+				case VALUE_TRUE:
+				case VALUE_FALSE:
+					value = p.getBooleanValue();
+					break;
+				case START_OBJECT:
+				case START_ARRAY:
+					// Recursively deserialize objects or arrays.
+					value = p.readValueAs(Object.class);
+					break;
+				case VALUE_NULL:
+					value = null;
+					break;
+				default:
+					// Fallback: Read value as a generic Object.
+					value = p.readValueAs(Object.class);
+					break;
+			}
+			p.nextToken(); // move to the next field or END_OBJECT
+		}
+
+		return new Item(key, value);
+	}
+}

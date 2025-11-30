@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+
+	<groupId>in.org.quicko.sheet</groupId>
+	<artifactId>core</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>in.org.quicko.sheet.core</name>
+	<packaging>jar</packaging>	
+
+	<properties>		
+		<apache-poi-version>4.1.1</apache-poi-version>
+		<junit-version>5.11.2</junit-version>
+		<mockito-version>5.11.0</mockito-version>
+		<org-json-version>20240303</org-json-version>
+		<fastxml-jackson-version>2.18.0</fastxml-jackson-version>
+	</properties>
+
+	<dependencies>		
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${apache-poi-version}</version>			
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${apache-poi-version}</version>
+		</dependency>
+		<dependency>
+				<groupId>org.json</groupId>
+				<artifactId>json</artifactId>
+				<version>${org-json-version}</version>
+		</dependency>
+		<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${fastxml-jackson-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${fastxml-jackson-version}</version>
+			</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit-version}</version>			
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite</artifactId>
+			<version>1.11.4</version>
+			<scope>test</scope>
+		</dependency>		
+	</dependencies>
+
+</project>
