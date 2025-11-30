@@ -8,6 +8,8 @@ import java.io.IOException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 
+import in.org.quicko.sheet.utils.WorkbookUtil;
+
 /**
  * Unit tests for Workbook class.
  */
@@ -27,7 +29,7 @@ public class WorkbookTest
 	public void testToExcel() throws IOException
 	{
 		Workbook workbook = new Workbook();
-		XSSFWorkbook excelData = workbook.toExcel();
+		XSSFWorkbook excelData = WorkbookUtil.toExcel(workbook);
 		assertNotNull(excelData);
 	}
 
