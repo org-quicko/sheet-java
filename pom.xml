@@ -8,7 +8,33 @@
 	<artifactId>core</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>in.org.quicko.sheet.core</name>
-	<packaging>jar</packaging>	
+	<packaging>jar</packaging>
+
+	<description>Library featuring spreadsheet-like data structure and related utilities for modern internet applications</description>
+	
+	<url>https://github.com/org-quicko/sheet-java</url>
+	
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	
+	<developers>
+		<developer>
+			<name>Quicko Developer</name>
+			<email>developer@quicko.com</email>
+			<organization>Quicko</organization>
+			<organizationUrl>https://quicko.company</organizationUrl>
+		</developer>
+	</developers>
+	
+	<scm>
+		<connection>scm:git:git://github.com/org-quicko/sheet-java.git</connection>
+		<developerConnection>scm:git:ssh://github.com:org-quicko/sheet-java.git</developerConnection>
+		<url>https://github.com/org-quicko/sheet-java/tree/main</url>
+	</scm>
 
 	<properties>		
 		<apache-poi-version>4.1.1</apache-poi-version>
@@ -63,5 +89,20 @@
 			<scope>test</scope>
 		</dependency>		
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>0.9.0</version>
+				<extensions>true</extensions>
+				<configuration>
+				<publishingServerId>central</publishingServerId>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
 
 </project>
