@@ -1,9 +1,11 @@
 package in.org.quicko.sheet.mapper;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
-public class JsonMapper extends com.fasterxml.jackson.databind.json.JsonMapper
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper.Builder;
+
+public class JsonMapper extends tools.jackson.databind.json.JsonMapper
 {
 
 	private static final long serialVersionUID = -5476932598287013800L;
@@ -15,13 +17,20 @@ public class JsonMapper extends com.fasterxml.jackson.databind.json.JsonMapper
 	 */
 	public JsonMapper()
 	{
-		super();
+		this(tools.jackson.databind.json.JsonMapper.builderWithJackson2Defaults());
+	}
 
-		this.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
-		this.enable(DeserializationFeature.USE_BIG_INTEGER_FOR_INTS);
+	public JsonMapper(Builder builder)
+	{
+		super(configure(builder));
+	}
 
-		this.disable(MapperFeature.AUTO_DETECT_GETTERS);
-		this.disable(MapperFeature.AUTO_DETECT_SETTERS);
+	private static Builder configure(Builder builder)
+	{
+		return builder.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+		        .enable(DeserializationFeature.USE_BIG_INTEGER_FOR_INTS)
+		        .changeDefaultVisibility(vc -> vc.withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+		                .withSetterVisibility(JsonAutoDetect.Visibility.NONE));
 	}
 
 }

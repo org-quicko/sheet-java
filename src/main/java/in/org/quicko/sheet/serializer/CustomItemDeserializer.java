@@ -1,36 +1,35 @@
 package in.org.quicko.sheet.serializer;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 
 import in.org.quicko.sheet.beans.Item;
 
-public class CustomItemDeserializer extends JsonDeserializer<Item>
+public class CustomItemDeserializer extends ValueDeserializer<Item>
 {
 
 	@Override
-	public Item deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
+	public Item deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException
 	{
 		String key = null;
 		Object value = null;
 
 		// If we're at the start of an object, advance to the first field name.
-		if (p.getCurrentToken() == JsonToken.START_OBJECT)
+		if (p.currentToken() == JsonToken.START_OBJECT)
 		{
 			p.nextToken();
 		}
 
 		// Process each field
-		while (p.getCurrentToken() == JsonToken.FIELD_NAME)
+		while (p.currentToken() == JsonToken.PROPERTY_NAME)
 		{
 			key = p.currentName(); // get the current key name
 			p.nextToken(); // move to the value token
 
-			JsonToken token = p.getCurrentToken();
+			JsonToken token = p.currentToken();
 			switch (token)
 			{
 				case VALUE_NUMBER_INT:
@@ -39,7 +38,7 @@ public class CustomItemDeserializer extends JsonDeserializer<Item>
 					value = p.getDecimalValue();
 					break;
 				case VALUE_STRING:
-					value = p.getText();
+					value = p.getString();
 					break;
 				case VALUE_TRUE:
 				case VALUE_FALSE:

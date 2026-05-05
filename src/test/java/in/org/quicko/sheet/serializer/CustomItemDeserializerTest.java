@@ -2,25 +2,25 @@ package in.org.quicko.sheet.serializer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.module.SimpleModule;
 
 import org.junit.jupiter.api.Test;
 
 import in.org.quicko.sheet.beans.Item;
+import in.org.quicko.sheet.mapper.JsonMapper;
 
 class CustomItemDeserializerTest
 {
 
 	@Test
-	void testDeserializeItem() throws JsonProcessingException
+	void testDeserializeItem() throws JacksonException
 	{
 		// Arrange
-		ObjectMapper objectMapper = new ObjectMapper();
 		SimpleModule module = new SimpleModule();
 		module.addDeserializer(Item.class, new CustomItemDeserializer());
-		objectMapper.registerModule(module);
+		JsonMapper objectMapper = new JsonMapper(
+		        tools.jackson.databind.json.JsonMapper.builderWithJackson2Defaults().addModule(module));
 
 		String json = "{\"id\":\"123\"}";
 
