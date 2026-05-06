@@ -100,6 +100,7 @@ public class JsonMapperTest
 	{
 		JsonMapper mapper = new JsonMapper();
 		Table table = new Table();
+		table.setHeader(new JSONArray().put("column_1"));
 		JSONArray row = new JSONArray().put("value1");
 		table.addRow(row);
 
@@ -107,7 +108,10 @@ public class JsonMapperTest
 		assertNotNull(node);
 		assertTrue(node.isObject());
 		assertEquals("table", node.get("name").asText());
-		assertTrue(node.has("rows"));
+		assertTrue(node.get("header").isArray());
+		assertTrue(node.get("rows").isArray());
+		assertEquals("column_1", node.get("header").get(0).asText());
+		assertEquals("value1", node.get("rows").get(0).get(0).asText());
 
 	}
 

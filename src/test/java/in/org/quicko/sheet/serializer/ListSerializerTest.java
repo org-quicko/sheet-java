@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.module.SimpleModule;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import in.org.quicko.sheet.beans.Item;
 import in.org.quicko.sheet.beans.List;
-import in.org.quicko.sheet.mapper.JsonMapper;
 
 class ListSerializerTest
 {
@@ -25,7 +25,7 @@ class ListSerializerTest
 		SimpleModule module = new SimpleModule();
 		module.addSerializer(Item.class, new CustomItemSerializer());
 		module.addDeserializer(Item.class, new CustomItemDeserializer());
-		mapper = new JsonMapper(tools.jackson.databind.json.JsonMapper.builderWithJackson2Defaults().addModule(module));
+		mapper = in.org.quicko.sheet.mapper.JsonMapper.builder().addModule(module).build();
 	}
 
 	@Test
