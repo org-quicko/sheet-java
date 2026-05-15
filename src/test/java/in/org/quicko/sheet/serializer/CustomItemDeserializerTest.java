@@ -19,7 +19,7 @@ class CustomItemDeserializerTest
 		// Arrange
 		SimpleModule module = new SimpleModule();
 		module.addDeserializer(Item.class, new CustomItemDeserializer());
-		JsonMapper objectMapper = in.org.quicko.sheet.mapper.JsonMapper.builder().addModule(module).build();
+		JsonMapper objectMapper = new in.org.quicko.sheet.mapper.JsonMapper().rebuild().addModule(module).build();
 
 		String json = "{\"id\":\"123\"}";
 

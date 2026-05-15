@@ -24,7 +24,7 @@ class CustomItemSerializerTest
 	{
 		SimpleModule module = new SimpleModule();
 		module.addSerializer(Item.class, new CustomItemSerializer());
-		mapper = in.org.quicko.sheet.mapper.JsonMapper.builder().addModule(module).build();
+		mapper = new in.org.quicko.sheet.mapper.JsonMapper().rebuild().addModule(module).build();
 	}
 
 	@Test
