@@ -4,12 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -35,7 +35,7 @@ public class JsonMapperTest
 	}
 
 	@Test
-	public void testCreateJsonNodeFromWorkbook() throws JsonProcessingException
+	public void testCreateJsonNodeFromWorkbook() throws JacksonException
 	{
 		JsonMapper mapper = new JsonMapper();
 		Workbook workbook = new Workbook();
@@ -51,7 +51,7 @@ public class JsonMapperTest
 	}
 
 	@Test
-	public void testCreateEntityFromJsonNode() throws IOException
+	public void testCreateEntityFromJsonNode() throws JacksonException
 	{
 		JsonMapper mapper = new JsonMapper();
 		String json =
@@ -66,7 +66,7 @@ public class JsonMapperTest
 	}
 
 	@Test
-	public void testCreateJsonNodeFromSheet() throws JsonProcessingException
+	public void testCreateJsonNodeFromSheet() throws JacksonException
 	{
 		JsonMapper mapper = new JsonMapper();
 		Sheet sheet = new Sheet();
@@ -82,7 +82,7 @@ public class JsonMapperTest
 	}
 
 	@Test
-	public void testCreateJsonNodeFromList() throws JsonProcessingException
+	public void testCreateJsonNodeFromList() throws JacksonException
 	{
 		JsonMapper mapper = new JsonMapper();
 		List list = new List();
@@ -97,10 +97,11 @@ public class JsonMapperTest
 	}
 
 	@Test
-	public void testCreateJsonNodeFromTable() throws JsonProcessingException
+	public void testCreateJsonNodeFromTable() throws JacksonException
 	{
 		JsonMapper mapper = new JsonMapper();
 		Table table = new Table();
+		table.setHeader(new JSONArray().put("column_1"));
 		JSONArray row = new JSONArray().put("value1");
 		table.addRow(row);
 
@@ -108,28 +109,31 @@ public class JsonMapperTest
 		assertNotNull(node);
 		assertTrue(node.isObject());
 		assertEquals("table", node.get("name").asText());
-		assertTrue(node.has("rows"));
+		assertTrue(node.get("header").isArray());
+		assertTrue(node.get("rows").isArray());
+		assertEquals("column_1", node.get("header").get(0).asText());
+		assertEquals("value1", node.get("rows").get(0).get(0).asText());
 
 	}
 
 	@Test
-	public void testNumberDeserialization() throws IOException
+	public void testNumberDeserialization() throws JacksonException
 	{
 		JsonMapper mapper = new JsonMapper();
 		String json = "{\"decimal\":123.456,\"integer\":123}";
 
 		JsonNode node = mapper.readTree(json);
 		assertTrue(node.get("decimal").isNumber());
-		assertTrue(node.get("decimal").numberType() == com.fasterxml.jackson.core.JsonParser.NumberType.BIG_DECIMAL);
+		assertTrue(node.get("decimal").numberType() == tools.jackson.core.JsonParser.NumberType.BIG_DECIMAL);
 		assertEquals(new BigDecimal("123.456"), node.get("decimal").decimalValue());
 
 		assertTrue(node.get("integer").isNumber());
-		assertTrue(node.get("integer").numberType() == com.fasterxml.jackson.core.JsonParser.NumberType.BIG_INTEGER);
+		assertTrue(node.get("integer").numberType() == tools.jackson.core.JsonParser.NumberType.BIG_INTEGER);
 		assertEquals(new BigInteger("123"), node.get("integer").bigIntegerValue());
 	}
 
 	@Test
-	public void testJsonObjectToJsonNode() throws IOException
+	public void testJsonObjectToJsonNode() throws JacksonException
 	{
 		JsonMapper mapper = new JsonMapper();
 		JSONObject jsonObj = new JSONObject();
@@ -145,7 +149,7 @@ public class JsonMapperTest
 	}
 
 	@Test
-	public void testJsonArrayToJsonNode() throws IOException
+	public void testJsonArrayToJsonNode() throws JacksonException
 	{
 		JsonMapper mapper = new JsonMapper();
 		JSONArray jsonArr = new JSONArray();
@@ -191,7 +195,7 @@ public class JsonMapperTest
 	}
 
 	@Test
-	public void testComplexTreeNavigation() throws IOException
+	public void testComplexTreeNavigation() throws JacksonException
 	{
 		JsonMapper mapper = new JsonMapper();
 		String json =

@@ -4,15 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import in.org.quicko.sheet.beans.Item;
 import in.org.quicko.sheet.beans.List;
-import in.org.quicko.sheet.mapper.JsonMapper;
 
 class ListSerializerTest
 {
@@ -22,15 +22,14 @@ class ListSerializerTest
 	@BeforeEach
 	void setUp()
 	{
-		mapper = new JsonMapper();
 		SimpleModule module = new SimpleModule();
 		module.addSerializer(Item.class, new CustomItemSerializer());
 		module.addDeserializer(Item.class, new CustomItemDeserializer());
-		mapper.registerModule(module);
+		mapper = new in.org.quicko.sheet.mapper.JsonMapper().rebuild().addModule(module).build();
 	}
 
 	@Test
-	void testSerializeEmptyList() throws JsonProcessingException
+	void testSerializeEmptyList() throws JacksonException
 	{
 		// Arrange
 		List list = new List();
@@ -43,7 +42,7 @@ class ListSerializerTest
 	}
 
 	@Test
-	void testSerializeListWithSingleItem() throws JsonProcessingException
+	void testSerializeListWithSingleItem() throws JacksonException
 	{
 		// Arrange
 		List list = new List();
@@ -57,7 +56,7 @@ class ListSerializerTest
 	}
 
 	@Test
-	void testSerializeListWithMultipleItems() throws JsonProcessingException
+	void testSerializeListWithMultipleItems() throws JacksonException
 	{
 		// Arrange
 		List list = new List();
@@ -75,7 +74,7 @@ class ListSerializerTest
 	}
 
 	@Test
-	void testSerializeListWithNestedItems() throws JsonProcessingException
+	void testSerializeListWithNestedItems() throws JacksonException
 	{
 		// Arrange
 		List list = new List();
@@ -93,7 +92,7 @@ class ListSerializerTest
 	}
 
 	@Test
-	void testSerializeListWithDifferentValueTypes() throws JsonProcessingException
+	void testSerializeListWithDifferentValueTypes() throws JacksonException
 	{
 		// Arrange
 		List list = new List();
@@ -115,7 +114,7 @@ class ListSerializerTest
 	}
 
 	@Test
-	void testSerializeAndDeserializeList() throws JsonProcessingException
+	void testSerializeAndDeserializeList() throws JacksonException
 	{
 		// Arrange
 		List originalList = new List();
@@ -148,7 +147,7 @@ class ListSerializerTest
 	}
 
 	@Test
-	void testSerializeListWithCustomMetadata() throws JsonProcessingException
+	void testSerializeListWithCustomMetadata() throws JacksonException
 	{
 		// Arrange
 		List list = new List();
@@ -164,7 +163,7 @@ class ListSerializerTest
 	}
 
 	@Test
-	void testRoundTripWithItemManipulation() throws JsonProcessingException
+	void testRoundTripWithItemManipulation() throws JacksonException
 	{
 		// Arrange
 		List originalList = new List();

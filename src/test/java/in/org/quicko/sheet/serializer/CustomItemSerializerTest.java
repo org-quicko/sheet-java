@@ -3,8 +3,9 @@ package in.org.quicko.sheet.serializer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import in.org.quicko.sheet.beans.Item;
-import in.org.quicko.sheet.mapper.JsonMapper;
 
 class CustomItemSerializerTest
 {
@@ -22,14 +22,13 @@ class CustomItemSerializerTest
 	@BeforeEach
 	void setUp()
 	{
-		mapper = new JsonMapper();
 		SimpleModule module = new SimpleModule();
 		module.addSerializer(Item.class, new CustomItemSerializer());
-		mapper.registerModule(module);
+		mapper = new in.org.quicko.sheet.mapper.JsonMapper().rebuild().addModule(module).build();
 	}
 
 	@Test
-	void testSerializeItem() throws JsonProcessingException
+	void testSerializeItem() throws JacksonException
 	{
 		// Arrange
 		Item item = new Item("id", "123");
@@ -42,7 +41,7 @@ class CustomItemSerializerTest
 	}
 
 	@Test
-	void testSerializeItemWithNumericValue() throws JsonProcessingException
+	void testSerializeItemWithNumericValue() throws JacksonException
 	{
 		// Arrange
 		Item item = new Item("count", 42);
@@ -55,7 +54,7 @@ class CustomItemSerializerTest
 	}
 
 	@Test
-	void testSerializeItemWithBooleanValue() throws JsonProcessingException
+	void testSerializeItemWithBooleanValue() throws JacksonException
 	{
 		// Arrange
 		Item item = new Item("active", true);
@@ -68,7 +67,7 @@ class CustomItemSerializerTest
 	}
 
 	@Test
-	void testSerializeItemWithNullValue() throws JsonProcessingException
+	void testSerializeItemWithNullValue() throws JacksonException
 	{
 
 		Object value = null;
@@ -90,7 +89,7 @@ class CustomItemSerializerTest
 		Item item = new Item(null, "value");
 
 		// Act & Assert
-		Exception exception = assertThrows(JsonProcessingException.class, () -> {
+		Exception exception = assertThrows(JacksonException.class, () -> {
 			mapper.writeValueAsString(item);
 		});
 
@@ -102,7 +101,7 @@ class CustomItemSerializerTest
 
 	@ParameterizedTest
 	@ValueSource(strings = {"key1", "key_with_underscore", "complex-key-123"})
-	void testSerializeItemWithDifferentKeyFormats(String key) throws JsonProcessingException
+	void testSerializeItemWithDifferentKeyFormats(String key) throws JacksonException
 	{
 		// Arrange
 		Item item = new Item(key, "test-value");
@@ -115,7 +114,7 @@ class CustomItemSerializerTest
 	}
 
 	@Test
-	void testSerializeItemWithComplexValue() throws JsonProcessingException
+	void testSerializeItemWithComplexValue() throws JacksonException
 	{
 		// Arrange
 		Item nestedItem = new Item("nested", "value");
